@@ -56,11 +56,36 @@ async function countryApiFetchData(country) {
         return response.json()
     })
     .then(body => {
-        let countryName = body[0].name.common;
-        let countryCapital = body[0].capital[0]
-        let countryArea = body[0].area
-        let countryCurrency = body[0].currencies
-        countryCurrency = Object.keys(countryCurrency)[0]
+
+        let countryName
+        let countryCapital
+        let countryArea
+        let countryCurrency 
+
+
+        if (typeof body[0].name.common === 'undefined') {
+            countryName = '-'
+        }else {countryName = body[0].name.common}
+
+
+        if (typeof body[0].capital === 'undefined') {
+            countryCapital = '-'
+        }else {countryCapital = body[0].capital[0]}
+
+
+        if (typeof body[0].area === 'undefined') {
+            countryArea = '-'
+        }else {
+            countryArea = body[0].area
+            countryArea = countryArea.toString()
+        }
+
+        if (typeof body[0].currencies === 'undefined') {
+            countryCurrency = '-'
+        }else {
+            countryCurrency = body[0].currencies
+            countryCurrency = Object.keys(countryCurrency)[0]
+        }
         
         //Save the data in a array and return it
         let countryData = []
@@ -73,5 +98,32 @@ async function countryApiFetchData(country) {
 
 
 
+// Define the function to write the fetched data on the workshee
+
+async function writeFetchedData(dataArr, rowIndex) {
+    let ColumnIndex = 1;
+    dataArr.forEach(element => {
+        ws.cell(rowIndex, ColumnIndex++).string(element)
+    })
+}
+
+
+
+
+
+
+async function makeXlsxFile(array, filename) {
+
+}
+
+
+
+
 // Create the xlsx file
 //wb.write('test.xlsx')
+
+
+
+
+/////////////////////////////////////// TESTE
+//countryApiFetchData('Antarctica').then(res => { console.log(res)})
