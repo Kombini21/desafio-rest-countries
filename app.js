@@ -35,10 +35,10 @@ var styleColumnHeadings = wb.createStyle({
     }
 })
 
-// Make the first header and apply the style
+// Create the first header and apply the style
 ws.cell(1,1,1,4,true).string('Countries List').style(styleHeader)
 
-// Make all the column headings and apply the style
+// Create all the column headings and apply the style
 let headingColumnIndex = 1;
 headingColumnNames.forEach(element => {
     ws.cell(2, headingColumnIndex++).string(element).style(styleColumnHeadings)
@@ -62,7 +62,7 @@ async function countryApiFetchData(country) {
         let countryArea
         let countryCurrency 
 
-
+        // Fetch the json data and if it's undefined, define it to -
         if (typeof body[0].name.common === 'undefined') {
             countryName = '-'
         }else {countryName = body[0].name.common}
@@ -77,7 +77,8 @@ async function countryApiFetchData(country) {
             countryArea = '-'
         }else {
             countryArea = body[0].area
-            countryArea = countryArea.toString()
+            countryArea = countryArea.toLocaleString("en-US")
+            countryArea = countryArea.replaceAll(',', '.') + ',00'
         }
 
         if (typeof body[0].currencies === 'undefined') {
@@ -109,21 +110,19 @@ async function writeFetchedData(dataArr, rowIndex) {
 
 
 
+// Define the function to fetch the data and create the final xlsx file 
 
+async function fetchAndCreateXlsx(array, filename) {
 
+    //For each country in the array, fetch the data and write in the worksheet
+    for (i = 0; i < array.length; i++) {
 
-async function makeXlsxFile(array, filename) {
+        let data = await countryApiFetchData(array[i]);
+        writeFetchedData(data, i + 3)
+    }
 
+    // Create the xlsx file
+    wb.write(`${filename}.xlsx`)
 }
 
 
-
-
-// Create the xlsx file
-//wb.write('test.xlsx')
-
-
-
-
-/////////////////////////////////////// TESTE
-//countryApiFetchData('Antarctica').then(res => { console.log(res)})
