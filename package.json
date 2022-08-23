@@ -1,0 +1,23 @@
+{
+  "name": "desafio-rest-countries",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kombini21/desafio-rest-countries.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kombini21/desafio-rest-countries/issues"
+  },
+  "homepage": "https://github.com/Kombini21/desafio-rest-countries#readme",
+  "dependencies": {
+    "excel4node": "^1.8.0"
+  }
+}
