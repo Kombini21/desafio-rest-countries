@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/Kombini21/desafio-rest-countries#readme",
   "dependencies": {
-    "excel4node": "^1.8.0"
+    "excel4node": "^1.8.0",
+    "node-fetch": "^2.6.7",
+    "request": "^2.88.2"
   }
 }
