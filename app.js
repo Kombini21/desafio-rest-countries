@@ -63,29 +63,34 @@ async function countryApiFetchData(country) {
         let countryCurrency 
 
         // Fetch the json data and if it's undefined, define it to -
-        if (typeof body[0].name.common === 'undefined') {
+        try {
+            if (typeof body[0].name.common === 'undefined') {
             countryName = '-'
-        }else {countryName = body[0].name.common}
+            }else {countryName = body[0].name.common}
 
 
-        if (typeof body[0].capital === 'undefined') {
-            countryCapital = '-'
-        }else {countryCapital = body[0].capital[0]}
+            if (typeof body[0].capital === 'undefined') {
+                countryCapital = '-'
+            }else {countryCapital = body[0].capital[0]}
 
 
-        if (typeof body[0].area === 'undefined') {
-            countryArea = '-'
-        }else {
-            countryArea = body[0].area
-            countryArea = countryArea.toLocaleString("en-US")
-            countryArea = countryArea.replaceAll(',', '.') + ',00'
+            if (typeof body[0].area === 'undefined') {
+                countryArea = '-'
+            }else {
+                countryArea = body[0].area
+                countryArea = countryArea.toLocaleString("en-US")
+                countryArea = countryArea.replaceAll(',', '.') + ',00'
+            }
+
+            if (typeof body[0].currencies === 'undefined') {
+                countryCurrency = '-'
+            }else {
+                countryCurrency = body[0].currencies
+                countryCurrency = Object.keys(countryCurrency)[0]
+            }
         }
-
-        if (typeof body[0].currencies === 'undefined') {
-            countryCurrency = '-'
-        }else {
-            countryCurrency = body[0].currencies
-            countryCurrency = Object.keys(countryCurrency)[0]
+        catch(err) {
+            console.log('What you wrote is not valid!! Try again!!')
         }
         
         //Save the data in a array and return it
@@ -150,7 +155,25 @@ async function fetchAndCreateAllXlsx() {
 }
 
 
+// Define a function to use user input to choose the countries for the xlsx file
 
+async function fetchAndCreateUserFiles() {
+
+    rl.close();
+
+    const rl1 = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl1.question('Write the countries you want separated by a - character (ex brasil-argentina-portugal)! \n\n', names => {
+        let namesArr = names.split('-');
+        console.log('Loading!!')
+        
+        fetchAndCreateXlsx(namesArr, 'userCountries');
+        rl1.close();
+    })
+}
 
 
 // Define the readline for user input, and start the application
@@ -178,12 +201,16 @@ rl.question('Hello, welcome to the country data fetcher!\n Choose one of the exe
 
     else if (choices == '3'){
 
-        console.log('teste')
+        fetchAndCreateUserFiles();
     }
 
 
     else if (choices == '4') {
         console.log('Closing app!')
+    }
+
+    else{
+        console.log('You need to choose from the choices provided!!!! Try again!!!')
     }
 
     rl.close();
