@@ -1,7 +1,7 @@
-// Require the node-fetch (for the API call) and the excel4node library, create a instance of a Workbook class and one worksheet
+// Require the node-fetch (for the API call), excel4node and the readline module (for the user input), create a instance of a Workbook class and one worksheet
 var fetch = require('node-fetch');
 var xl = require('excel4node');
-const workbook = require('excel4node/distribution/lib/workbook');
+const readline = require('readline');
 
 var wb = new xl.Workbook();
 
@@ -122,7 +122,72 @@ async function fetchAndCreateXlsx(array, filename) {
     }
 
     // Create the xlsx file
-    wb.write(`${filename}.xlsx`)
+    wb.write(`./output/${filename}.xlsx`)
+    console.log('File created!')
 }
+
+// Define a function to create a xlsx file with all the countries from the API
+
+async function fetchAndCreateAllXlsx() {
+
+    await fetch(`https://restcountries.com/v2/all`)
+    .then(response => {
+        return response.json()
+    })
+    .then(body => {
+
+        let allCountriesArr = [];
+        for (i = 0; i < body.length; i++) {
+            let palavra = body[i].name.replace(/\([^()]*\)$/g, '')
+            allCountriesArr.push(palavra)
+            
+        }
+        return allCountriesArr
+    }).then(arr => {
+        console.log('Making file!')
+        fetchAndCreateXlsx(arr, 'allCountries')
+    })
+}
+
+
+
+
+
+// Define the readline for user input, and start the application
+
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+// Create the terminal response based on the user input
+
+rl.question('Hello, welcome to the country data fetcher!\n Choose one of the execution methods below! - \n 1 - default -- create a default xlsx file \n 2 - all countries -- return a xlsx file with data of all countries \n 3 - user input -- input your the countries you want data of \n 4 -- exit - exit app\n\n', choices => {
+
+    if (choices == '1') {
+            console.log('loading')
+            let countriesArr = ['Afghanistan', 'Åland Islands','Albania',' Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus']
+            fetchAndCreateXlsx(countriesArr, 'countriesDefault')
+    }
+
+    else if (choices == '2') {
+        console.log('loading');
+        fetchAndCreateAllXlsx();
+    }
+
+    else if (choices == '3'){
+
+        console.log('teste')
+    }
+
+
+    else if (choices == '4') {
+        console.log('Closing app!')
+    }
+
+    rl.close();
+});
+
 
 
